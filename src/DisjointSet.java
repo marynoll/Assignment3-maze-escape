@@ -1,0 +1,43 @@
+/**
+ * Mission 0. Disjoint set union (DSU).
+ * Cells are numbered 0 .. n-1. Write the whole class here.
+ * Needed: union by size (the smaller tree goes under the larger one) and path compression in find.
+ */
+public class DisjointSet {
+    private int[] parent;
+    private int[] size;
+    private int sets;
+
+    public DisjointSet(int n) {
+        parent = new int[n];
+        size = new int[n];
+        sets = n;
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    public int find(int x) {
+        if (parent[x] != x) parent[x] = find(parent[x]);
+        return parent[x];
+    }
+
+    public boolean union(int a, int b) {
+        int ra = find(a), rb = find(b);
+        if (ra == rb) return false;
+        if (size[ra] < size[rb]) { int t = ra; ra = rb; rb = t; }
+        parent[rb] = ra;
+        size[ra] += size[rb];
+        sets--;
+        return true;
+    }
+
+    public boolean connected(int a, int b) {
+        return find(a) == find(b);
+    }
+
+    public int count() {
+        return sets;
+    }
+}
